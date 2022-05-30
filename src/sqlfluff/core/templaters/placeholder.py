@@ -133,12 +133,19 @@ class PlaceholderTemplater(RawTemplater):
 
         """
         context = self.get_context(config)
+        regex = context["__bind_param_regex"]
+        PlaceholderTemplater.process_with_context(in_str=in_str, fname=fname, regex=regex,
+                                                  context=context)
+
+    @staticmethod
+    def process_with_context(
+        in_str: str, fname: str, regex: str, context: dict[str, str]
+    ) -> Tuple[Optional[TemplatedFile], list]:
         template_slices = []
         raw_slices = []
         last_pos_raw, last_pos_templated = 0, 0
         out_str = ""
 
-        regex = context["__bind_param_regex"]
         # when the param has no name, use a 1-based index
         param_counter = 1
         for found_param in regex.finditer(in_str):
@@ -171,12 +178,12 @@ class PlaceholderTemplater(RawTemplater):
             )
             raw_slices.append(
                 RawFileSlice(
-                    raw=in_str[last_pos_raw : span[0]],
+                    raw=in_str[last_pos_raw: span[0]],
                     slice_type="literal",
                     source_idx=last_pos_raw,
                 )
             )
-            out_str += in_str[last_pos_raw : span[0]]
+            out_str += in_str[last_pos_raw: span[0]]
             # add the current replaced element
             start_template_pos = last_pos_templated + last_literal_length
             template_slices.append(
@@ -190,7 +197,7 @@ class PlaceholderTemplater(RawTemplater):
             )
             raw_slices.append(
                 RawFileSlice(
-                    raw=in_str[span[0] : span[1]],
+                    raw=in_str[span[0]: span[1]],
                     slice_type="templated",
                     source_idx=span[0],
                 )

@@ -8,11 +8,12 @@ from sqlfluff.core.templaters.base import RawTemplater
 from sqlfluff.core.templaters.jinja import JinjaTemplater
 from sqlfluff.core.templaters.python import PythonTemplater
 from sqlfluff.core.templaters.placeholder import PlaceholderTemplater
+from sqlfluff.core.templaters.hive import HiveTemplater
 
 
 def core_templaters():
     """Returns the templater tuples for the core templaters."""
-    yield from [RawTemplater, JinjaTemplater, PythonTemplater, PlaceholderTemplater]
+    yield from [RawTemplater, JinjaTemplater, PythonTemplater, PlaceholderTemplater, HiveTemplater]
 
 
 __all__ = (
@@ -21,5 +22,6 @@ __all__ = (
     "JinjaTemplater",
     "PythonTemplater",
     "PlaceholderTemplater",
+    "HiveTemplater",
     "core_templaters",
 )
